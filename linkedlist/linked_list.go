@@ -1,93 +1,98 @@
-package main
+package linkedlist
 
 import (
 	"fmt"
-
-	"github.com/cheekybits/genny/generic"
 )
 
-type linkedList struct {
-	head *Node
+type LinkedList struct {
+	Head *Node
 }
 
 type Node struct {
 	data Item
-	next *Node
+	Next *Node
 }
 
-type Item generic.Type
+type Item interface{}
 
-func main() {
-	var lList linkedList
-	node1 := Node{1, nil}
-	node2 := Node{2, nil}
-	node3 := Node{3, nil}
-	lList.head = &node1
-	node1.next = &node2
-	node2.next = &node3
-
-	lList.printlist()
-	lList.insertAtBegin(0)
-	lList.insertAtEnd(4)
-	lList.insertAtEnd(5)
-	lList.printlist()
-	rLList := lList.reverseList()
-	rLList.printlist()
-	lList.insertAtIndex(6, 5)
-	lList.printlist()
+func NewLList() LinkedList {
+	var lList LinkedList
+	return lList
 }
 
-func (ll *linkedList) printlist() {
-	head := ll.head
+func NewNode(data Item) Node {
+	var node = Node{data, nil}
+	return node
+}
+
+func (ll *LinkedList) Printlist() {
+	head := ll.Head
 	for head != nil {
 		fmt.Print(head.data)
-		head = head.next
+		head = head.Next
 	}
 	fmt.Println()
 }
 
-func (ll *linkedList) insertAtBegin(data Item) {
+func (ll *LinkedList) InsertAtBegin(data Item) {
 	node := Node{data, nil}
-	node.next = ll.head
-	ll.head = &node
+	node.Next = ll.Head
+	ll.Head = &node
 }
 
-func (ll *linkedList) insertAtEnd(data Item) {
-	head := ll.head
+func (ll *LinkedList) InsertAtEnd(data Item) {
+	head := ll.Head
 	node := Node{data, nil}
-	for head.next != nil {
-		head = head.next
+	for head.Next != nil {
+		head = head.Next
 	}
-	head.next = &node
+	head.Next = &node
 }
 
-func (ll *linkedList) insertAtIndex(data Item, index int) {
+func (ll *LinkedList) InsertAtIndex(data Item, index int) {
 	count := 0
-	head := ll.head
-	for head != nil {
+	Head := ll.Head
+	for Head != nil {
 		if index == count {
 			if index == 0 {
-				ll.insertAtBegin(data)
+				ll.InsertAtBegin(data)
 				break
 			} else {
 				node := Node{data, nil}
-				node.next = head.next
-				head.next = &node
+				node.Next = Head.Next
+				Head.Next = &node
 			}
 		}
 		count++
-		head = head.next
+		Head = Head.Next
 	}
 	if index >= count || index < 0 {
 		fmt.Println("Index out of bounds")
 	}
 }
 
-func (ll *linkedList) reverseList() (rLList linkedList) {
-	head := ll.head
-	for head != nil {
-		rLList.insertAtBegin(head.data)
-		head = head.next
+func (ll *LinkedList) ReverseList() (rLList LinkedList) {
+	Head := ll.Head
+	for Head != nil {
+		rLList.InsertAtBegin(Head.data)
+		Head = Head.Next
 	}
 	return rLList
+}
+
+func (ll *LinkedList) PrintFromNthNode(n int) Item {
+	head := ll.Head
+	ref := ll.Head
+	count := 0
+	for count < n {
+		ref = ref.Next
+		count++
+	}
+
+	for ref.Next != nil {
+		head = head.Next
+		ref = ref.Next
+	}
+
+	return head.data
 }
