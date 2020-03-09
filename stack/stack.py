@@ -15,6 +15,7 @@ def push(stack, item):
 
 def pop(stack):
     if isEmpty(stack):
+        # print(maxsize)
         return str(-maxsize-1)
     return stack.pop()
 
