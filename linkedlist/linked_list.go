@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-
-	"github.com/cheekybits/genny/generic"
 )
 
 type linkedList struct {
@@ -15,7 +13,7 @@ type Node struct {
 	next *Node
 }
 
-type Item generic.Type
+type Item interface{}
 
 func main() {
 	var lList linkedList
@@ -31,10 +29,10 @@ func main() {
 	lList.insertAtEnd(4)
 	lList.insertAtEnd(5)
 	lList.printlist()
-	rLList := lList.reverseList()
-	rLList.printlist()
 	lList.insertAtIndex(6, 5)
 	lList.printlist()
+	rLList := lList.reverseList()
+	rLList.printlist()
 }
 
 func (ll *linkedList) printlist() {
@@ -83,11 +81,17 @@ func (ll *linkedList) insertAtIndex(data Item, index int) {
 	}
 }
 
-func (ll *linkedList) reverseList() (rLList linkedList) {
+func (ll *linkedList) reverseList() *linkedList {
 	head := ll.head
-	for head != nil {
-		rLList.insertAtBegin(head.data)
-		head = head.next
+	curr := head
+	var next *Node
+	var prev *Node
+	for curr != nil {
+		next = curr.next
+		curr.next = prev
+		prev = curr
+		curr = next
 	}
-	return rLList
+	ll.head = prev
+	return ll
 }
